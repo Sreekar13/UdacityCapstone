@@ -2,7 +2,6 @@
 version: 2.1
 # Use a package of configuration called an orb.
 orbs:
-  slack: circleci/slack@4.1
   aws-cli: circleci/aws-cli@1.4.0  
 # Orchestrate or schedule a set of jobs
 jobs:
@@ -23,10 +22,6 @@ jobs:
             # Your code here
             cd nginx/
             make lint
-
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
 
 workflows:
   # Name the workflow "welcome"
