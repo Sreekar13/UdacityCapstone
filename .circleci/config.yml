@@ -21,6 +21,7 @@ jobs:
           name: Lint dockerfile and html
           command: |
             # Your code here
+            cd nginx/
             make lint
 
       - slack/notify:
