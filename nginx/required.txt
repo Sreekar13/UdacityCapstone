@@ -1,0 +1,2 @@
+pip install html_linter 
+html_lint.py index.html
