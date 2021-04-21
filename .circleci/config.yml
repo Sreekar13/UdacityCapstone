@@ -15,6 +15,7 @@ jobs:
           name: Make install
           command: |
             # Your code here
+            cd nginx/
             make install
       - run:
           name: Lint dockerfile and html
