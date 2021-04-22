@@ -1,6 +1,19 @@
 # Use the latest 2.1 version of CircleCI pipeline process engine. See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 # Use a package of configuration called an orb.
+commands:
+  destroy_green:
+    description: This command will delete the environment
+    parameters:
+      stack_name: 
+        type: string
+        default: circleciaws
+    steps:
+      - run: 
+          name: delete cloudformation stack
+          command: aws cloudformation delete-stack --stack-name parameters.stack_name
+          when_on: fail
+
 orbs:
   aws-cli: circleci/aws-cli@1.4.0  
 # Orchestrate or schedule a set of jobs
@@ -49,6 +62,7 @@ jobs:
           key: inventory_ec2_cap
           paths:
             - inventory_ec2_instances_list.txt
+      - destroy_green
 
   configure_ec2:
     docker: 
@@ -69,7 +83,7 @@ jobs:
           name: Configuring ec2 instance
           command: |
             ansible-playbook -i inventory_ec2_instances_list.txt main-remote.yml -vvv
-          
+      - destroy_green
 
 workflows:
   # Name the workflow "welcome"
