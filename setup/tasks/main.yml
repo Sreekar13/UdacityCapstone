@@ -3,12 +3,12 @@
   shell: |
     curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
     chmod +x ./kubectl
+    sudo mv ./kubectl /usr/local/bin/kubectl
 
 - name: move kubernetes to bin
   become: yes
   shell: |
-    mv ./kubectl /usr/local/bin/kubectl
-    amazon-linux-extras install docker
+    amazon-linux-extras install -y docker
 
 - name: Display kubernetes
   shell: |

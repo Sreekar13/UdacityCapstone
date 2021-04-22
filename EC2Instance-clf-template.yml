@@ -5,6 +5,7 @@ Resources:
     Properties:
       ImageId: ami-047a51fa27710816e
       KeyName: DevOpsChallenge
+      InstanceType: t2.medium
       SecurityGroupIds: 
         - sg-0534a7d30b7b95a8a
       
