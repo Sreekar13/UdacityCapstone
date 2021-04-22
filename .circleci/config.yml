@@ -42,6 +42,8 @@ jobs:
       - run: aws cloudformation create-stack --stack-name circleciaws --region us-east-1 --template-body file://EC2Instance-clf-template.yml
       - run: sleep 30
       - run: echo "[serve]" > inventory_ec2_instances_list.txt
+      - run: sleep 20
+      - run: aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text --region us-east-1
       - run: aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text --region us-east-1 >> inventory_ec2_instances_list.txt
       - save_cache:
           key: inventory_ec2_cap
