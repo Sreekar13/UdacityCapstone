@@ -11,7 +11,7 @@ commands:
     steps:
       - run: 
           name: delete cloudformation stack
-          command: aws cloudformation delete-stack --stack-name parameters.stack_name
+          command: aws cloudformation delete-stack --stack-name circleciaws
           when_on: fail
 
 orbs:
