@@ -71,7 +71,7 @@ jobs:
           name: Configuring ec2 instance
           command: |
             ansible --version
-            ansible-playbook -i inventory_ec2_instances_list.txt main-remote.yml -vvv
+            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory_ec2_instances_list.txt main-remote.yml -vvv
       - destroy-environment
       - run:
           name: Display the URL
