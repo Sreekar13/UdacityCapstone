@@ -1,0 +1,64 @@
+---
+- name: setup kubernetes
+  shell: |
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+    chmod +x ./kubectl
+    sudo mv ./kubectl /usr/local/bin/kubectl
+
+- name: install docker
+  become: yes
+  shell: |
+    amazon-linux-extras install -y docker
+
+- name: Start docker daemon
+  become: yes
+  systemd:
+    state: started
+    name: docker
+
+- name: Install conntrack-tools
+  become: yes
+  yum:
+    name: conntrack-tools
+    state: present
+
+- name: Display kubernetes
+  shell: |
+    sudo docker version
+    kubectl version --client
+
+- name: Install minikube
+  shell: |
+    curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 \
+    && chmod +x minikube \
+    && sudo mv minikube /usr/local/bin/
+
+- name: Run minikube
+  become: yes
+  shell: |
+    /usr/local/bin/minikube start --driver=none
+
+- name: Run docker image in kubernetes
+  become: yes
+  shell: |
+    /usr/local/bin/kubectl create ns nginx
+
+- name: copy deployment file
+  copy:
+    src: nginx-deployment.yml 
+    dest: /home/ec2-user/
+
+- name: copy service file
+  copy:
+    src: nginx-service.yml 
+    dest: /home/ec2-user/
+
+- name: apply k8s deployment - nginx
+  become: yes
+  shell: |
+    /usr/local/bin/kubectl create -f /home/ec2-user/nginx-deployment.yml
+
+- name: apply k8s service - nginx
+  become: yes
+  shell: |
+    /usr/local/bin/kubectl create -f /home/ec2-user/nginx-service.yml

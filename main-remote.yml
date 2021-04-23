@@ -1,0 +1,8 @@
+---
+- name: To install kubernetes and deploy image into kubernetes cluster in ec2
+  hosts: serve
+  vars: 
+    ansible_host_key_checking: false
+  user: ec2-user
+  roles:
+    - setup
