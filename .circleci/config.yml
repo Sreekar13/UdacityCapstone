@@ -59,7 +59,7 @@ jobs:
       - run: aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text --region us-east-1
       - run: aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text --region us-east-1 >> inventory_ec2_instances_list.txt
       - save_cache:
-          key: v1-inventory-{{ checksum "inventory_ec2_instances_list.txt" }}
+          key: cpa
           paths:
             - inventory_ec2_instances_list.txt
 
@@ -70,7 +70,7 @@ jobs:
       - run: sleep 30
       - checkout
       - restore_cache:
-          key: v1-inventory-{{ checksum "inventory_ec2_instances_list.txt" }}
+          key: cpa
       - run: cat inventory_ec2_instances_list.txt
       - add_ssh_keys:
           fingerprints: 4e:be:10:2c:f9:ab:28:60:a3:fd:51:3b:06:78:ec:cd
