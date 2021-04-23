@@ -49,30 +49,19 @@ jobs:
             echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin 
             ./run_docker.sh
 
-  create_infrastructure:
-    docker:
-      - image: amazon/aws-cli
+  create_and_configure_ec2:
+    docker: 
+      - image: python:3.7-alpine3.11
     steps:
-      - checkout 
+      - run: sleep 30
+      - checkout
+      - aws-cli/setup
       - run: aws cloudformation create-stack --stack-name "circleciaws-${CIRCLE_WORKFLOW_ID}" --region us-east-1 --template-body file://EC2Instance-clf-template.yml
       - run: sleep 30
       - run: echo "[serve]" > inventory_ec2_instances_list.txt
       - run: sleep 20
       - run: aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text --region us-east-1
       - run: aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --output text --region us-east-1 >> inventory_ec2_instances_list.txt
-      - save_cache:
-          key: v1-deps-{{ checksum "inventory_ec2_instances_list.txt" }}
-          paths:
-            - inventory_ec2_instances_list.txt
-
-  configure_ec2:
-    docker: 
-      - image: python:3.7-alpine3.11
-    steps:
-      - run: sleep 30
-      - checkout
-      - restore_cache:
-          key: v1-deps-{{ checksum "inventory_ec2_instances_list.txt" }}
       - run: cat inventory_ec2_instances_list.txt
       - add_ssh_keys:
           fingerprints: 4e:be:10:2c:f9:ab:28:60:a3:fd:51:3b:06:78:ec:cd
