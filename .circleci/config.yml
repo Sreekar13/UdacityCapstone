@@ -53,15 +53,14 @@ jobs:
     docker: 
       - image: python:3.7-alpine3.11
     steps:
-      - run: sleep 30
       - checkout
-      - aws-cli/setup
       - run: 
           name: Install cURL
           command: |
             apk update
             apk upgrade
             apk add curl
+      - aws-cli/setup      
       - run: aws cloudformation create-stack --stack-name "circleciaws-${CIRCLE_WORKFLOW_ID}" --region us-east-1 --template-body file://EC2Instance-clf-template.yml
       - run: sleep 30
       - run: echo "[serve]" > inventory_ec2_instances_list.txt
