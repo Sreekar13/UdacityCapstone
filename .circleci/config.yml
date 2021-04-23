@@ -66,10 +66,11 @@ jobs:
       - run:
           name: Install ansible dependencies
           command: |
-            python -m pip install ansible
+            pip3 install ansible
       - run: 
           name: Configuring ec2 instance
           command: |
+            ansible --version
             ansible-playbook -i inventory_ec2_instances_list.txt main-remote.yml -vvv
       - destroy-environment
       - run:
