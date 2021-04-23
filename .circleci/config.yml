@@ -89,7 +89,5 @@ workflows:
       - lint
       - build:
           requires: [lint]
-      - create_infrastructure:
+      - create_and_configure_ec2:
           requires: [build]
-      - configure_ec2:
-          requires: [create_infrastructure]
